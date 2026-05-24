@@ -98,10 +98,15 @@ Open `lib/core/constants/api_constants.dart` and replace the URL with your own:
 
 ```dart
 class ApiConstants {
-  static const String baseUrl =
-      'https://crudcrud.com/api/YOUR_UNIQUE_ID';
+  static String get baseUrl {
+    final rawUrl = dotenv.env['CRUD_API_URL']?.trim() ?? '';
+    if (rawUrl.isEmpty) {
+      throw Exception('CRUD_API_URL is missing from the .env file.');
+    }
+    return rawUrl;
+  }
 
-  static const String productsEndpoint = '$baseUrl/products';
+  static String get productsEndpoint => '$baseUrl/products';
 }
 ```
 
