@@ -201,15 +201,6 @@ crudcrud.com REST API
 
 ---
 
-## Assignment Info
-
-- **Course:** Flutter Development — UBIT Batch 23
-- **Assignment:** 9 — Product Catalog Manager
-- **Topics:** Provider State Management, HTTP API Integration, CRUD Operations
-- **Marks:** 100 pts
-
----
-
 ## License
 
 This project was built for academic purposes.
