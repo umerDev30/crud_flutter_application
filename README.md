@@ -1,116 +1,119 @@
 # Product Catalog Manager
 
-A modern Flutter application for managing a product catalog with full CRUD (Create, Read, Update, Delete) functionality. The project emphasizes clean architecture, scalable state management, and a smooth user experience with responsive UI design.
+A Flutter mobile app for managing a product catalog with full CRUD operations. Built with Provider for state management and crudcrud.com as the live REST API backend.
 
 ---
 
-## ✨ Features
+## Screenshots
 
-### 📦 Product Management (CRUD)
+| Loading | Home | Empty State |
+|---------|------|-------------|
+| Animated skeleton cards while fetching | Product list with edit/delete actions | Shown when no products exist |
 
-* Create new products with name and price
-* View all products in a structured list
-* Edit existing product details
-* Delete products with confirmation dialog
-
-### 🎨 UI/UX Experience
-
-* Modern Material 3 design system
-* Card-based product layout for clarity
-* Loading indicators during API calls
-* Empty state UI when no products exist
-* Snackbar feedback for user actions
-* Smooth transitions and responsive layout
-
-### ⚙️ State Management
-
-* Built using **Provider** + **ChangeNotifier**
-* Centralized product state handling
-* Efficient UI rebuilds with minimal overhead
-
-### 🌐 Networking
-
-* REST API integration using HTTP package
-* CRUD operations handled via service layer
-* Structured API response handling
-
-### 🛡️ Robustness
-
-* Error handling for network failures
-* Graceful fallback UI states
-* Input validation for product forms
-
-### 🔐 Environment Configuration
-
-* Secure API configuration using `.env`
-* Separation of sensitive data from source code
+| Add Product | Edit Product | Error State |
+|-------------|-------------|-------------|
+| Form with validation | Pre-filled form | Retry button on failure |
 
 ---
 
-## 🛠 Tech Stack
+## Features
 
-* Flutter (SDK ^3.8.1)
-* Dart
-* Provider (State Management)
-* HTTP (API Requests)
-* flutter_dotenv (Environment Variables)
-* Material Design 3
-
----
-
-
-
-## 🚀 Getting Started
-
-### 📋 Prerequisites
-
-Before running the project, ensure you have:
-
-* Flutter SDK installed (>= 3.8.1)
-* Dart SDK
-* Android Studio or VS Code
-* A working REST API backend (e.g. crudcrud or custom backend)
+- View all products fetched from a live REST API
+- Add new products with name and price validation
+- Edit existing products with pre-filled form
+- Delete products with a confirmation dialog
+- Loading skeleton animation while fetching
+- Empty state with a prompt to add the first product
+- Error state with a retry button
+- Pull-to-refresh on the product list
+- Snackbar feedback after every CRUD operation
+- Friendly error messages (API limit, no internet, not found)
 
 ---
 
-### 📥 Installation
+## Tech Stack
 
-#### 1. Clone the repository
+| Layer | Package |
+|-------|---------|
+| State Management | [provider ^6.1.2](https://pub.dev/packages/provider) |
+| HTTP Requests | [http ^1.2.1](https://pub.dev/packages/http) |
+| Backend | [crudcrud.com](https://crudcrud.com) |
+| Language | Dart 3 / Flutter |
 
-```bash
-git clone https://github.com/AbdullahAli2005/product_catalog_manager.git
-cd product_catalog_manager
+---
+
+## Project Structure
+
+```
+lib/
+├── main.dart                          # Entry point + MultiProvider setup
+│
+├── core/
+│   ├── constants/
+│   │   └── api_constants.dart         # Base URL and endpoint
+│   └── theme/
+│       └── app_theme.dart             # Colors, text styles, component themes
+│
+├── models/
+│   └── product.dart                   # Product data class + fromJson / toJson
+│
+├── services/
+│   └── product_service.dart           # All HTTP calls — GET POST PUT DELETE
+│
+├── providers/
+│   └── product_provider.dart          # ChangeNotifier — state + CRUD logic
+│
+└── views/
+    ├── home/
+    │   ├── home_screen.dart            # Main screen with all UI states
+    │   └── widgets/
+    │       ├── product_card.dart       # Individual product card
+    │       ├── loading_state.dart      # Skeleton loading animation
+    │       └── empty_state.dart        # Zero products illustration
+    └── product_form/
+        └── product_form_screen.dart    # Shared Add / Edit form screen
 ```
 
-#### 2. Install dependencies
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Flutter SDK `>=3.0.0`
+- Dart SDK `>=3.0.0`
+- An active internet connection
+- A valid [crudcrud.com](https://crudcrud.com) endpoint
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/umerDev30/crud_flutter_application.git
+cd product-catalog-flutter
+```
+
+### 2. Set your crudcrud endpoint
+
+Open `lib/core/constants/api_constants.dart` and replace the URL with your own:
+
+```dart
+class ApiConstants {
+  static const String baseUrl =
+      'https://crudcrud.com/api/YOUR_UNIQUE_ID';
+
+  static const String productsEndpoint = '$baseUrl/products';
+}
+```
+
+You can get a free endpoint at [https://crudcrud.com](https://crudcrud.com) — no sign-up needed.
+
+### 3. Install dependencies
 
 ```bash
 flutter pub get
 ```
 
----
-
-## 🔐 Environment Setup
-
-This project uses environment variables to securely manage configuration such as API endpoints.
-
-### Step 1: Create `.env` file
-
-Create a file in the root directory:
-
-```
-.env
-```
-
-### Step 2: Add configuration
-
-```env
-# Base API URL for product CRUD operations
-API_BASE_URL=https://your-api.com/api
-```
-
-
-## ▶️ Run the App
+### 4. Run the app
 
 ```bash
 flutter run
@@ -118,89 +121,90 @@ flutter run
 
 ---
 
-## 📂 Project Structure
+## API Reference
 
-```
-lib/
-├── core/
-│   └── theme/
-│       └── app_theme.dart
-│
-├── models/
-│   └── product.dart
-│
-├── providers/
-│   └── product_provider.dart
-│
-├── services/
-│   └── product_service.dart
-│
-├── views/
-│   ├── home/
-│   │   ├── home_screen.dart
-│   │   └── widgets/
-│   └── product_form/
-│       └── product_form_screen.dart
-│
-└── main.dart
-```
+The app communicates with crudcrud.com using standard REST calls.
 
----
+| Operation | Method | Endpoint | Body |
+|-----------|--------|----------|------|
+| Get all products | `GET` | `/products` | — |
+| Create a product | `POST` | `/products` | `{ name, price }` |
+| Update a product | `PUT` | `/products/:id` | `{ name, price }` |
+| Delete a product | `DELETE` | `/products/:id` | — |
 
-## 🔌 API Contract
-
-The application expects a REST API with the following endpoints:
-
-### Products
-
-* `GET /products` → Fetch all products
-* `POST /products` → Create new product
-* `PUT /products/:id` → Update product
-* `DELETE /products/:id` → Delete product
-
----
-
-### 📦 Product Model
+### Sample product JSON
 
 ```json
 {
-  "_id": "string",
-  "name": "string",
-  "price": "number"
+  "_id": "64f3a1b2c7e8d9001a2b3c4d",
+  "name": "Wireless Headphones",
+  "price": 149.99
 }
 ```
 
----
-
-## 🧠 Architecture Overview
-
-The app follows a simple layered architecture:
-
-* **UI Layer (Views)** → Screens & widgets
-* **State Layer (Provider)** → Business logic + state
-* **Service Layer** → API communication
-* **Model Layer** → Data structures
-* **Core Layer** → Theme and shared utilities
+> **Note:** `_id` is assigned automatically by crudcrud. Never include it in POST or PUT request bodies.
 
 ---
 
-## 🤝 Contributing
+## State Management
 
-Contributions are welcome.
+The app uses the Provider pattern with `ChangeNotifier`.
 
-* Fork the repository
-* Create a feature branch
-* Commit changes
-* Open a pull request
+```
+UI (widgets)
+    │
+    ▼
+ProductProvider          ← holds _products, _isLoading, _errorMessage
+    │
+    ▼
+ProductService           ← makes HTTP calls, returns Dart objects
+    │
+    ▼
+crudcrud.com REST API
+```
+
+### Provider API used in this project
+
+| API | Where used | Why |
+|-----|-----------|-----|
+| `context.read<T>()` | `initState`, button callbacks, `_save()` | One-time method call, no rebuild needed |
+| `Consumer<T>` | Home screen body | Rebuilds only the list area, not the whole Scaffold |
 
 ---
 
-## 📄 License
+## Known Limitations
 
-This project is licensed under the MIT License.
+- **crudcrud free tier allows 100 requests per 24-hour window.** If you hit this limit you will see a friendly error message. Wait 24 hours or get a new endpoint.
+- **Data does not persist across endpoint resets.** crudcrud resets your data every 24 hours. This is expected behavior for the assignment.
+- The `_id` field is a `String` (not `int`) because crudcrud uses MongoDB-style ObjectIDs.
 
 ---
 
-## ❤️ Acknowledgment
+## Common Issues
 
-Built with Flutter for learning and practical demonstration of CRUD + Provider architecture.
+**App shows "Something went wrong" immediately**
+- Your crudcrud endpoint has expired (24-hour reset). Go to [crudcrud.com](https://crudcrud.com), copy the new URL, and update `api_constants.dart`.
+
+**App shows "Daily API limit reached"**
+- You have used all 100 free requests. Wait 24 hours or use a fresh endpoint.
+
+**`flutter pub get` fails**
+- Make sure your Flutter SDK version is `>=3.0.0`. Run `flutter --version` to check.
+
+**Changes not reflecting after edit**
+- Make sure you are not caching the old endpoint URL. Hot restart (`Shift + R` in terminal) rather than hot reload.
+
+---
+
+## Assignment Info
+
+- **Course:** Flutter Development — UBIT Batch 23
+- **Assignment:** 9 — Product Catalog Manager
+- **Topics:** Provider State Management, HTTP API Integration, CRUD Operations
+- **Marks:** 100 pts
+
+---
+
+## License
+
+This project was built for academic purposes.
